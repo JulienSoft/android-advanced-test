@@ -6,7 +6,7 @@ L'objectif est de créer un projet simple qui respecte certaines contraintes.
 
 Objectifs :
 - Implémenter une liste de cellule avec des informations.
-	- La cellule doit au moins contenir une image, un titre et un sous-titre.
+	- La cellule doit au moins contenir une image (provenant d'un appel HTTP), un titre et un sous-titre.
 	- La liste doit contenir au moins 50 éléments.
 - Lors du clic sur une cellule, ouvrir un nouveau controller pour afficher des informations détaillées concernant la cellule.
 	- Le nouveau écran doit contenir une donnée (image ou texte, peu importe) provenant d'un appel API HTTPS.
