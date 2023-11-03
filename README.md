@@ -10,7 +10,6 @@ Objectifs :
 	- La liste doit contenir au moins 50 éléments.
 - Lors du clic sur une cellule, ouvrir un nouveau controller pour afficher des informations détaillées concernant la cellule.
 	- Le nouveau écran doit contenir une donnée (image ou texte, peu importe) provenant d'un appel API HTTPS.
-	- Avoir une animation pour les éléments communs aux deux vues.
 	- Utiliser des StateFlow/MutableStateFlow pour afficher des données en temps réelle
 - Tests unitaires sur les `viewModels`
 - Tests unitaires sur l'appel API
