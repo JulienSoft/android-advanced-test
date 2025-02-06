@@ -31,6 +31,7 @@ Livrable :
 - Le livrable doit contenir le dossier `.git` pour analyser l'utilisation de GIT
 
 Versions:
-- Android Studio : Android Studio Giraffe | 2022.3.1 Patch 1
-- Kotlin : 1.9.0
-- Gradle : 8.1.1
+- Kotlin : 1.9.22
+- Gradle : 8.7
+- Android Gradle plugin : 8.5.2
+- Compile and run on Android Studio Koala | 2024.1.1 Patch 1
