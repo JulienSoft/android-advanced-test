@@ -57,6 +57,7 @@ Create an Android application that displays charging stations on a map and their
 - Fork this repository
 - Create a feature branch
 - Submit a pull request with your implementation
+- The test should be completed within 5 days
 
 ## API Documentation
 API documentation and endpoints are available at: https://openchargemap.org/site/develop/api
