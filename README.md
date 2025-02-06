@@ -1,37 +1,62 @@
-# android-test
+# Chargemap Senior Android Technical Test
 
-Ce projet a pour but d'être transmis aux candidats postulant pour un poste de développeur Android chez Chargemap.
+## Overview
+This project is a technical test for senior Android developer positions at Chargemap. It's designed to evaluate advanced Android development skills, architectural decisions, and code quality standards.
 
-L'objectif est de créer un projet simple qui respecte certaines contraintes.
+## Requirements
+Create an Android application that displays charging stations on a map and their details. The app should demonstrate your expertise in:
 
-Objectifs :
-- Implémenter une liste de cellule avec des informations.
-	- La cellule doit au moins contenir une image (provenant d'un appel HTTP), un titre et un sous-titre.
-	- La liste doit contenir au moins 50 éléments.
-- Lors du clic sur une cellule, ouvrir un nouveau controller pour afficher des informations détaillées concernant la cellule.
-	- Le nouveau écran doit contenir une donnée (image ou texte, peu importe) provenant d'un appel API HTTPS.
-	- Utiliser des StateFlow/MutableStateFlow pour afficher des données en temps réelle
-- Tests unitaires sur les `viewModels`
-- Tests unitaires sur l'appel API
-- Le sujet est libre.
-- Le design est libre.
-- Forker le projet depuis github -> ChargeMap/android-test
-- Créer une pull request
+### Technical Requirements
+- Modern Android development with Kotlin
+- Clean Architecture principles
+- Dependency Injection
+- Reactive programming
+- Unit testing and UI testing
+- Custom UI components
+- Memory management and performance optimization
 
-Contraintes :
-- Utiliser Jetpack Compose pour les vues
-- Respecter l'architecture MVVM
+### Features
+1. **Map View**
+   - Display charging stations on a map
+   - Implement custom markers with station status indicators
+   - Handle map state preservation across configuration changes
+   - Implement efficient viewport-based data loading
 
-Bonus :
-- Gérer une vue différente pour tablette pour être plus adapté
-- Gérer un dark mode
+2. **Station Details**
+   - Create a bottom sheet with smooth transitions and gestures
+   - Display comprehensive station information
+   - Implement real-time availability updates
+   - Handle deep linking to station details
 
-Livrable :
-- Le projet doit être compilable et executable sur un émulateur
-- Le livrable doit contenir le dossier `.git` pour analyser l'utilisation de GIT
+3. **Search & Filters**
+   - Implement advanced search with auto-suggestions
+   - Add multiple filter options (connector types, power, availability)
+   - Create an efficient filter UI with proper state management
 
-Versions:
-- Kotlin : 1.9.22
-- Gradle : 8.7
-- Android Gradle plugin : 8.5.2
-- Compile and run on Android Studio Koala | 2024.1.1 Patch 1
+## Technical requirements
+- Use Compose UI only
+- Use Kotlin Coroutines and Flow for asynchronous operations
+- Use Compose Navigation
+- Implement proper error handling and recovery
+- Implement proper memory management for resources
+- Add proper logging and crash reporting setup
+
+## Evaluation Criteria
+- Architecture design and implementation
+- Code quality and organization
+- Testing strategy and implementation
+- Git commit history and documentation
+- UI/UX implementation
+
+## Bonus Points
+- Map markers clustering
+- Caching strategies
+- Custom animations and transitions
+
+## Submission
+- Fork this repository
+- Create a feature branch
+- Submit a pull request with your implementation
+
+## API Documentation
+API documentation and endpoints are available at: https://openchargemap.org/site/develop/api
