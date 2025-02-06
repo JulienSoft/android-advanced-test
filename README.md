@@ -14,6 +14,7 @@ Create an Android application that displays charging stations on a map and their
 - Unit testing and UI testing
 - Custom UI components
 - Memory management and performance optimization
+- Caching strategies
 
 ### Features
 1. **Map View**
@@ -25,13 +26,12 @@ Create an Android application that displays charging stations on a map and their
 2. **Station Details**
    - Create a bottom sheet with smooth transitions and gestures
    - Display comprehensive station information
-   - Implement real-time availability updates
    - Handle deep linking to station details
 
-3. **Search & Filters**
-   - Implement advanced search with auto-suggestions
-   - Add multiple filter options (connector types, power, availability)
-   - Create an efficient filter UI with proper state management
+## Bonus Points
+- Map markers clustering
+- Custom animations and transitions
+- Implement real-time availability updates
 
 ## Technical requirements
 - Use Compose UI only
@@ -47,11 +47,6 @@ Create an Android application that displays charging stations on a map and their
 - Testing strategy and implementation
 - Git commit history and documentation
 - UI/UX implementation
-
-## Bonus Points
-- Map markers clustering
-- Caching strategies
-- Custom animations and transitions
 
 ## Submission
 - Fork this repository
