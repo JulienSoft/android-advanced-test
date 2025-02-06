@@ -1,7 +1,7 @@
-# Chargemap Senior Android Technical Test
+# Chargemap Android Technical Test
 
 ## Overview
-This project is a technical test for senior Android developer positions at Chargemap. It's designed to evaluate advanced Android development skills, architectural decisions, and code quality standards.
+This project is a technical test for Android developer positions at Chargemap. It's designed to evaluate advanced Android development skills, architectural decisions, and code quality standards.
 
 ## Requirements
 Create an Android application that displays charging stations on a map and their details. The app should demonstrate your expertise in:
