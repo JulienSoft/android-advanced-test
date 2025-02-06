@@ -60,3 +60,9 @@ Create an Android application that displays charging stations on a map and their
 
 ## API Documentation
 API documentation and endpoints are available at: https://openchargemap.org/site/develop/api
+
+## Versions:
+- Kotlin : 1.9.22
+- Gradle : 8.7
+- Android Gradle plugin : 8.5.2
+- Compile and run on Android Studio Koala | 2024.1.1 Patch 1
