@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+mapbox = "11.9.2"
 kotlin = "1.9.22"
 core-ktx = "1.15.0"
 junit = "4.13.2"
@@ -8,8 +9,12 @@ espresso-core = "3.6.1"
 lifecycle-runtime-ktx = "2.8.7"
 activity-compose = "1.10.0"
 compose-bom = "2025.01.01"
+maps-compose = "11.9.2"
 
 [libraries]
+androidx-activity = { module = "androidx.activity:activity", version.ref = "activity-compose" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-compose" }
+mapbox = { module = "com.mapbox.maps:android", version.ref = "mapbox" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -17,6 +22,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+maps-compose = { module = "com.mapbox.extension:maps-compose", version.ref = "maps-compose" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

@@ -1,4 +1,5 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -64,6 +65,13 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
+
+    implementation(libs.mapbox)
+    implementation(libs.maps.compose)
+
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
+
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
