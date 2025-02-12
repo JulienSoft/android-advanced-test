@@ -1,8 +1,8 @@
-import org.gradle.kotlin.dsl.implementation
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -66,11 +66,20 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
 
+    // Used for display mapbox
     implementation(libs.mapbox)
     implementation(libs.maps.compose)
 
+    // Used for edge-to-edge
     implementation(libs.androidx.activity)
     implementation(libs.androidx.activity.ktx)
+
+    // Used to make http requests
+    implementation(libs.bundles.ktor)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.compose.lifecycle)
+    implementation(libs.bundles.koin)
+    implementation(libs.bundles.coroutines)
 
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
