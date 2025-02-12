@@ -81,6 +81,10 @@ dependencies {
     implementation(libs.bundles.koin)
     implementation(libs.bundles.coroutines)
 
+    // Used for permissions
+    implementation(libs.accompanist.permissions)
+
+    // Testing
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)

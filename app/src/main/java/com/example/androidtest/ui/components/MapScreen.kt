@@ -1,6 +1,5 @@
 package com.example.androidtest.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -22,13 +21,12 @@ import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
 import org.koin.androidx.compose.koinViewModel
 
+
 @Composable
 fun MapScreen() {
     val isDarkMode = isSystemInDarkTheme()
     val viewModel: OpenChargeMapViewModel = koinViewModel()
     val stationsUIState = viewModel.stationsUIState.collectAsStateWithLifecycle().value
-
-    Log.e("MapScreen", "Stations: ${stationsUIState.stations} Error: ${stationsUIState.error} IsLoading: ${stationsUIState.isLoading}")
 
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
@@ -42,20 +40,21 @@ fun MapScreen() {
     }
 
     MapboxMap(
-        Modifier.fillMaxSize(),
+        Modifier
+            .fillMaxSize(),
         mapViewportState = mapViewportState,
-        scaleBar = {  },        // Disable scaleBar
-        logo = {  },            // Disable logo
-        attribution = {  },     // Disable attribution
+        scaleBar = { },        // Disable scaleBar
+        logo = { },            // Disable logo
+        attribution = { },     // Disable attribution
         style = {
             MapboxStandardStyle { // Another option MapboxStandardSatelliteStyle()
                 // Change light mode with system
-                lightPreset = if(isDarkMode) LightPresetValue.NIGHT else LightPresetValue.DAY
+                lightPreset = if (isDarkMode) LightPresetValue.NIGHT else LightPresetValue.DAY
             }
         },
     ) {
         // Display annotations for each station on the map
-        stationsUIState.stations.filter { station -> station.isValid() } .map { station ->
+        stationsUIState.stations.filter { station -> station.isValid() }.map { station ->
             ViewAnnotation(
                 options = viewAnnotationOptions {
                     // View annotation is placed at the specific geo coordinate
