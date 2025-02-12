@@ -1,5 +1,9 @@
 package com.example.androidtest.api.models
 
+import androidx.compose.ui.graphics.Color
+import com.example.androidtest.ui.theme.stationOfflineColor
+import com.example.androidtest.ui.theme.stationOperationnalColor
+import com.mapbox.geojson.Point
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,7 +15,10 @@ data class ChargingStation(
     @SerialName("StatusType") val statusType: StatusType?,
     @SerialName("AddressInfo") val addressInfo: AddressInfo?,
     @SerialName("Connections") val connections: List<Connection>?
-)
+) {
+    fun isValid() = addressInfo?.latitude != null && addressInfo.longitude != null
+    fun locationPoint(): Point = Point.fromLngLat(addressInfo?.longitude ?: 0.0, addressInfo?.latitude ?: 0.0)
+}
 
 @Serializable
 data class UsageType(
@@ -23,7 +30,9 @@ data class UsageType(
 data class StatusType(
     @SerialName("IsOperational") val isOperational: Boolean,
     @SerialName("Title") val title: String
-)
+) {
+    fun color(): Color = Color(if (isOperational) stationOperationnalColor else stationOfflineColor)
+}
 
 @Serializable
 data class AddressInfo(
