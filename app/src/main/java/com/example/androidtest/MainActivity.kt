@@ -14,6 +14,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.androidtest.ui.components.MapScreen
 import com.example.androidtest.ui.components.PermissionsRequest
 import com.example.androidtest.ui.theme.AndroidTestTheme
@@ -21,6 +22,7 @@ import com.example.androidtest.ui.theme.AndroidTestTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         setContent {
