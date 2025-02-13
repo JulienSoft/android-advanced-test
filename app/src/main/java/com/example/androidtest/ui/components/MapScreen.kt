@@ -3,7 +3,10 @@ package com.example.androidtest.ui.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidtest.viewmodel.OpenChargeMapViewModel
 import com.mapbox.geojson.Point
@@ -11,6 +14,7 @@ import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
+import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.standard.LightPresetValue
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
 import com.mapbox.maps.plugin.PuckBearing
@@ -19,15 +23,23 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
+@OptIn(FlowPreview::class)
 @Composable
 fun MapScreen() {
     val isDarkMode = isSystemInDarkTheme()
+    val coroutineScope = rememberCoroutineScope()
     val viewModel: OpenChargeMapViewModel = koinViewModel()
     val stationsUIState = viewModel.stationsUIState.collectAsStateWithLifecycle().value
+    val mapState = rememberMapState()       // Contains the state of the map (current viewport)
+    val configuration = LocalConfiguration.current
+    viewModel.updateScreenWidth(configuration.screenWidthDp)
 
+    // Default viewport state
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
             // To see Earth globe before localization is available
@@ -39,9 +51,24 @@ fun MapScreen() {
         }
     }
 
+    // Manage camera changes
+    DisposableEffect(Unit) {
+        val job = coroutineScope.launch {
+            mapState.cameraChangedEvents.collect { cameraChanged ->
+                viewModel.onCameraChanged(cameraChanged.cameraState)
+            }
+        }
+
+        // Cancel the job when the composable is disposed
+        onDispose {
+            job.cancel()
+        }
+    }
+
     MapboxMap(
         Modifier
             .fillMaxSize(),
+        mapState = mapState,
         mapViewportState = mapViewportState,
         scaleBar = { },        // Disable scaleBar
         logo = { },            // Disable logo
