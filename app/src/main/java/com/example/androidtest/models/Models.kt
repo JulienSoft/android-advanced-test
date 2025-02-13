@@ -1,15 +1,19 @@
-package com.example.androidtest.api.models
+package com.example.androidtest.models
 
 import androidx.compose.ui.graphics.Color
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.androidtest.ui.theme.stationOfflineColor
 import com.example.androidtest.ui.theme.stationOperationnalColor
 import com.mapbox.geojson.Point
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+
 @Serializable
+@Entity(tableName = "chargingStation")
 data class ChargingStation(
-    @SerialName("ID") val id: Int,
+    @PrimaryKey @SerialName("ID") val id: Int,
     @SerialName("UUID") val uuid: String,
     @SerialName("UsageType") val usageType: UsageType?,
     @SerialName("StatusType") val statusType: StatusType?,
@@ -21,22 +25,25 @@ data class ChargingStation(
 }
 
 @Serializable
+@Entity(tableName = "usageType")
 data class UsageType(
-    @SerialName("ID") val id: Int,
+    @PrimaryKey @SerialName("ID") val id: Int,
     @SerialName("Title") val title: String
 )
 
 @Serializable
+@Entity(tableName = "statusType")
 data class StatusType(
     @SerialName("IsOperational") val isOperational: Boolean,
-    @SerialName("Title") val title: String
+    @PrimaryKey @SerialName("Title") val title: String
 ) {
     fun color(): Color = Color(if (isOperational) stationOperationnalColor else stationOfflineColor)
 }
 
 @Serializable
+@Entity(tableName = "addressinfo")
 data class AddressInfo(
-    @SerialName("Title") val title: String,
+    @PrimaryKey @SerialName("Title") val title: String,
     @SerialName("AddressLine1") val addressLine1: String?,
     @SerialName("Latitude") val latitude: Double?,
     @SerialName("Longitude") val longitude: Double?,
@@ -44,18 +51,21 @@ data class AddressInfo(
 )
 
 @Serializable
+@Entity(tableName = "country")
 data class Country(
-    @SerialName("Title") val title: String
+    @PrimaryKey @SerialName("Title") val title: String
 )
 
 @Serializable
+@Entity(tableName = "connection")
 data class Connection(
-    @SerialName("ID") val id: Int,
+    @PrimaryKey @SerialName("ID") val id: Int,
     @SerialName("ConnectionType") val connectionType: ConnectionType?,
     @SerialName("PowerKW") val powerKW: Double?
 )
 
 @Serializable
+@Entity(tableName = "connectiontype")
 data class ConnectionType(
-    @SerialName("Title") val title: String
+    @PrimaryKey @SerialName("Title") val title: String
 )

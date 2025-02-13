@@ -2,7 +2,8 @@ package com.example.androidtest.viewmodel
 
 import com.example.androidtest.api.APIResult
 import com.example.androidtest.api.OpenChargeMapAPIService
-import com.example.androidtest.api.models.ChargingStation
+import com.example.androidtest.db.ChargingDao
+import com.example.androidtest.models.ChargingStation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -12,7 +13,8 @@ interface OpenChargeMapRepository {
 
 class OpenChargeMapRepositoryImpl(
     private val apiService: OpenChargeMapAPIService,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
+    private val chargingDao: ChargingDao
 ): OpenChargeMapRepository {
 
     override suspend fun getChargingStations(
@@ -21,9 +23,10 @@ class OpenChargeMapRepositoryImpl(
         maxResults: Int,
         distance: Int
     ): APIResult<List<ChargingStation>> {
-        return withContext(dispatcher){
+        return withContext(dispatcher) {
             try{
                 val chargingStations = apiService.getChargingStations(longitude, latitude, maxResults, distance)
+                chargingDao.insertAllChargingStation(chargingStations)
                 APIResult.Success(chargingStations)
             }catch (e: Exception){
                 APIResult.Error(e.message ?: "Something went wrong")

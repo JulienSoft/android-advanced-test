@@ -1,6 +1,6 @@
 package com.example.androidtest.api
 
-import com.example.androidtest.api.models.ChargingStation
+import com.example.androidtest.models.ChargingStation
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

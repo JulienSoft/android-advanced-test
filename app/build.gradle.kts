@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -80,6 +81,16 @@ dependencies {
 
     // Used for permissions
     implementation(libs.accompanist.permissions)
+
+    // Room
+    // implementation(libs.room.runtime)
+    // ksp(libs.androidx.room.compiler)
+
+    implementation("androidx.room:room-runtime:2.6.1") // Use the latest Room version
+    ksp("androidx.room:room-compiler:2.6.1") // Use KSP for annotation processing
+
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 
     // Testing
     androidTestImplementation(libs.ui.test.junit4)

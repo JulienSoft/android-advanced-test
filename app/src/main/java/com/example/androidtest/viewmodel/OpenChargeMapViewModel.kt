@@ -3,7 +3,7 @@ package com.example.androidtest.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidtest.api.APIResult
-import com.example.androidtest.api.models.ChargingStation
+import com.example.androidtest.models.ChargingStation
 import com.example.androidtest.haversineDistance
 import com.example.androidtest.interpolateResolution
 import com.mapbox.maps.CameraState

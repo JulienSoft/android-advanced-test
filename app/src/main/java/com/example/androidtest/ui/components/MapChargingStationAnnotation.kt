@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.androidtest.R
-import com.example.androidtest.api.models.ChargingStation
+import com.example.androidtest.models.ChargingStation
 
 @Composable
 fun MapChargingStationAnnotation(station: ChargingStation) {
