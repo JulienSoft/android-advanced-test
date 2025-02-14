@@ -21,7 +21,10 @@ fun MapChargingStationAnnotation(viewModel: OpenChargeMapViewModel, station: Cha
     // Return if statusType is not available, I don't want to display incomplete charging station
     val color = station.statusType?.color() ?: return
 
-    val painter = painterResource(R.drawable.electric_bolt)
+    val painter = if(station.statusType.isOperational == true)
+        painterResource(R.drawable.electric_bolt)
+    else
+        painterResource(R.drawable.electric_bolt_offline)
     Canvas(
         modifier = Modifier
             .clickable(onClick = {
