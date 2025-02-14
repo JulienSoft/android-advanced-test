@@ -33,9 +33,10 @@ import org.koin.androidx.compose.koinViewModel
 fun MapScreen() {
     val isDarkMode = isSystemInDarkTheme()
     val coroutineScope = rememberCoroutineScope()
-    val viewModel: OpenChargeMapViewModel = koinViewModel()
-    val stationsUIState = viewModel.stationsUIState.collectAsStateWithLifecycle().value
     val mapState = rememberMapState()       // Contains the state of the map (current viewport)
+    val viewModel: OpenChargeMapViewModel = koinViewModel()
+
+    val chargingStations by viewModel.chargingStations.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
     viewModel.updateScreenWidth(configuration.screenWidthDp)
 

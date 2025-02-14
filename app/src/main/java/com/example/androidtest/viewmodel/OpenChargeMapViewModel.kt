@@ -16,8 +16,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class StationsUIStation(
-    val stations: List<ChargingStation> = emptyList(),
+data class LoadingUIState(
     val error: String? = null,
     val isLoading: Boolean = false
 )
@@ -30,9 +29,10 @@ class OpenChargeMapViewModel(
     val debounceCameraStateChange: Long = 300     // Adjust as needed
 
     // Store the current state of the stations UI
-    private val _stationsUIState = MutableStateFlow(StationsUIStation())
-    val stationsUIState: StateFlow<StationsUIStation> = _stationsUIState
+    private val _loadingUIState = MutableStateFlow(LoadingUIState())
+    val loadingUIState: StateFlow<LoadingUIState> = _loadingUIState
 
+    val chargingStations = repository.getAllChargingStations()
     // Store the current camera state (center, zoom, pitch, bearing, etc...)
     private val _cameraState = MutableStateFlow<CameraState?>(null)
     val cameraState: StateFlow<CameraState?> = _cameraState
@@ -78,29 +78,35 @@ class OpenChargeMapViewModel(
                     // Get the stations based on the new camera state
                     getStationResults(it.center.longitude(), it.center.latitude(), distance = distance.toInt())
                 }
+    /*
+     * Retry fetching the stations with current camera state
+     */
+    fun retry() {
+        viewModelScope.launch {
+            cameraState.value?.let {
+                getStationResults(it)
             }
         }
     }
 
     // maxResults: Maximum number of results to return, can be configured in settings
     private fun getStationResults(longitude: Double, latitude: Double, maxResults: Int = 50, distance: Int = 10) {
-        _stationsUIState.value = _stationsUIState.value.copy(isLoading = true, stations = emptyList())
+        _loadingUIState.value = _loadingUIState.value.copy(isLoading = true, error = null)
 
         viewModelScope.launch {
             val result = repository.getChargingStations(longitude, latitude, maxResults, distance)
             when(result){
 
                 is APIResult.Success -> {
-                    _stationsUIState.update {
+                    _loadingUIState.update {
                         it.copy(
-                            stations = result.data,
                             isLoading = false,
                         )
                     }
                 }
 
                 is APIResult.Error -> {
-                    _stationsUIState.update {
+                    _loadingUIState.update {
                         it.copy(
                             isLoading = false,
                             error = result.message

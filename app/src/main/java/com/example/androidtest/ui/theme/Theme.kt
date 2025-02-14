@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -40,6 +41,9 @@ private val LightColorScheme = lightColorScheme(
 
 const val stationOperationnalColor = 0xFF2caf56.toInt()
 const val stationOfflineColor = 0xFFFF0000.toInt()
+const val loadingBarBackgroundColor = 0x55a7dcf6.toInt()
+const val loadingBarColor = 0xFF21abed.toInt()
+
 
 @Composable
 fun AndroidTestTheme(
@@ -61,6 +65,7 @@ fun AndroidTestTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
+            window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
