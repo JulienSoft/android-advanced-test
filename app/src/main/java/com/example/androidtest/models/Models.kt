@@ -3,10 +3,14 @@ package com.example.androidtest.models
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.androidtest.distanceFromCameraStateInMeters
+import com.example.androidtest.metersToLatitude
+import com.example.androidtest.metersToLongitude
 import com.example.androidtest.ui.theme.stationOfflineColor
 import com.example.androidtest.ui.theme.stationOperationnalColor
 import com.example.androidtest.ui.theme.stationUnknownColor
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,8 +25,27 @@ data class ChargingStation(
     @SerialName("AddressInfo") val addressInfo: AddressInfo?,
     @SerialName("Connections") val connections: List<Connection>?
 ) {
-    fun isValid() = addressInfo?.latitude != null && addressInfo.longitude != null
     fun locationPoint(): Point = Point.fromLngLat(addressInfo?.longitude ?: 0.0, addressInfo?.latitude ?: 0.0)
+    fun inViewPort(cameraState: CameraState?, screenWidthPx: Int): Boolean {
+        if (cameraState == null) return false
+
+        val centerLat = cameraState.center.latitude()
+        val centerLon = cameraState.center.longitude()
+
+        val distance = distanceFromCameraStateInMeters(cameraState, screenWidthPx)
+
+        // Convert meters to latitude/longitude offsets
+        val latOffset = metersToLatitude(distance / 2)  // Divide by 2 for half viewport
+        val lonOffset = metersToLongitude(distance / 2, centerLat)
+
+        // Get charging station location
+        val stationLat = locationPoint().latitude()
+        val stationLon = locationPoint().longitude()
+
+        // Check if inside bounding box
+        return stationLat in (centerLat - latOffset)..(centerLat + latOffset) &&
+                stationLon in (centerLon - lonOffset)..(centerLon + lonOffset)
+    }
 }
 
 @Serializable

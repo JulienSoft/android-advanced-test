@@ -37,8 +37,18 @@ fun MapScreen() {
     val viewModel: OpenChargeMapViewModel = koinViewModel()
 
     val chargingStations by viewModel.chargingStations.collectAsStateWithLifecycle()
+    val filteredStations by viewModel.filteredStations.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
-    viewModel.updateScreenWidth(configuration.screenWidthDp)
+
+    var screenWidth = 0f
+    with(LocalDensity.current) {
+        screenWidth = configuration.screenWidthDp.dp.toPx()
+        viewModel.updateScreenWidth(screenWidth.toInt())
+    }
+
+    var showDynamicViewAnnotations by remember {
+        mutableStateOf(false)
+    }
 
     // Default viewport state
     val mapViewportState = rememberMapViewportState {
@@ -94,8 +104,8 @@ fun MapScreen() {
             ) {
                 MapChargingStationAnnotation(station)
             }
-        }
-
+        },
+    ) {
         // Enable location puck
         MapEffect(Unit) { mapView ->
             mapView.location.updateSettings {
@@ -112,6 +122,26 @@ fun MapScreen() {
                     .zoom(10.0)
                     .build()
             )
+
+            // Only show view annotation after all the runtime layers are added.
+            mapView.mapboxMap.mapLoadedEvents.firstOrNull()?.let {
+                showDynamicViewAnnotations = true
+            }
+        }
+
+        // Display annotations for each station on the map
+        if(showDynamicViewAnnotations && (mapViewportState.cameraState?.zoom ?: 0.0) > 11) {
+            val stationsToRender = remember(filteredStations) { filteredStations }
+            stationsToRender.forEach { station ->
+                ViewAnnotation(
+                    options = viewAnnotationOptions {
+                        geometry(station.locationPoint()) // Place at correct coordinates
+                        allowOverlap(true)
+                    }
+                ) {
+                    MapChargingStationAnnotation(station)
+                }
+            }
         }
     }
 }

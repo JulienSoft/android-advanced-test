@@ -3,16 +3,18 @@ package com.example.androidtest.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidtest.api.APIResult
-import com.example.androidtest.models.ChargingStation
+import com.example.androidtest.distanceFromCameraStateInMeters
 import com.example.androidtest.haversineDistance
-import com.example.androidtest.interpolateResolution
+import com.example.androidtest.models.ChargingStation
 import com.mapbox.maps.CameraState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -33,6 +35,12 @@ class OpenChargeMapViewModel(
     val loadingUIState: StateFlow<LoadingUIState> = _loadingUIState
 
     val chargingStations = repository.getAllChargingStations()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList()) // Caches and prevents recomputation
+
+    // Debounced viewport stations
+    private val _filteredStations = MutableStateFlow<List<ChargingStation>>(emptyList())
+    val filteredStations: StateFlow<List<ChargingStation>> = _filteredStations
+
     // Store the current camera state (center, zoom, pitch, bearing, etc...)
     private val _cameraState = MutableStateFlow<CameraState?>(null)
     val cameraState: StateFlow<CameraState?> = _cameraState
@@ -68,16 +76,15 @@ class OpenChargeMapViewModel(
                 false // Accept update
             }.collect { cameraState ->
                 // If the camera state changes, get the stations from OpenChargeMap API
-                cameraState?.let {
-                    // Get the distance in meter per pixels based on the zoom level
-                    val meterByPx = interpolateResolution(it.zoom)
+                getStationResults(cameraState)
 
-                    // Calculate the distance in km based on the screen width
-                    val distance = screenWidth.value * meterByPx / 1000
-
-                    // Get the stations based on the new camera state
-                    getStationResults(it.center.longitude(), it.center.latitude(), distance = distance.toInt())
+                _filteredStations.update {
+                    chargingStations.value.filter { it.inViewPort(cameraState, screenWidth.value) }
                 }
+            }
+        }
+    }
+
     /*
      * Retry fetching the stations with current camera state
      */
@@ -89,6 +96,17 @@ class OpenChargeMapViewModel(
         }
     }
 
+    private fun getStationResults(cameraState: CameraState?) {
+        // If the camera state is null, return
+        if (cameraState == null) return
+
+        // Calculate the distance based on the camera state
+        val distanceKm = distanceFromCameraStateInMeters(cameraState, screenWidth.value) / 1000
+
+        // Get the stations based on the new camera state
+        getStationResults(cameraState.center.longitude(), cameraState.center.latitude(), distance = distanceKm.toInt())
+    }
+
     // maxResults: Maximum number of results to return, can be configured in settings
     private fun getStationResults(longitude: Double, latitude: Double, maxResults: Int = 50, distance: Int = 10) {
         _loadingUIState.value = _loadingUIState.value.copy(isLoading = true, error = null)
@@ -96,7 +114,6 @@ class OpenChargeMapViewModel(
         viewModelScope.launch {
             val result = repository.getChargingStations(longitude, latitude, maxResults, distance)
             when(result){
-
                 is APIResult.Success -> {
                     _loadingUIState.update {
                         it.copy(
