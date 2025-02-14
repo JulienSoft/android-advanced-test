@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.androidtest.ui.theme.stationOfflineColor
 import com.example.androidtest.ui.theme.stationOperationnalColor
+import com.example.androidtest.ui.theme.stationUnknownColor
 import com.mapbox.geojson.Point
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -34,10 +35,16 @@ data class UsageType(
 @Serializable
 @Entity(tableName = "statusType")
 data class StatusType(
-    @SerialName("IsOperational") val isOperational: Boolean,
+    @SerialName("IsOperational") val isOperational: Boolean?,
     @PrimaryKey @SerialName("Title") val title: String
 ) {
-    fun color(): Color = Color(if (isOperational) stationOperationnalColor else stationOfflineColor)
+    fun color(): Color {
+        return Color(when (isOperational) {
+            true -> stationOperationnalColor
+            false -> stationOfflineColor
+            null -> stationUnknownColor
+        })
+    }
 }
 
 @Serializable

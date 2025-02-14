@@ -16,8 +16,8 @@ import com.example.androidtest.models.ChargingStation
 
 @Composable
 fun MapChargingStationAnnotation(station: ChargingStation) {
-    val color = station.statusType?.color() ?: return
     // Return if statusType is not available, I don't want to display incomplete charging station
+    val color = station.statusType?.color() ?: return
 
     val painter = painterResource(R.drawable.electric_bolt)
     Canvas(

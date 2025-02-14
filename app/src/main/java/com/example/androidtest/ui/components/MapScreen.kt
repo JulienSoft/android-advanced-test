@@ -71,6 +71,7 @@ fun MapScreen() {
             .fillMaxSize(),
         mapState = mapState,
         mapViewportState = mapViewportState,
+        compass = { },         // Disable compass
         scaleBar = { },        // Disable scaleBar
         logo = { },            // Disable logo
         attribution = { },     // Disable attribution
