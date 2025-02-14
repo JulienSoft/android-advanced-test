@@ -5,6 +5,7 @@ import com.example.androidtest.models.AddressInfo
 import com.example.androidtest.models.Connection
 import com.example.androidtest.models.ConnectionType
 import com.example.androidtest.models.Country
+import com.example.androidtest.models.OperatorInfo
 import com.example.androidtest.models.StatusType
 import com.example.androidtest.models.UsageType
 import com.google.gson.Gson
@@ -69,5 +70,16 @@ class RoomTypeConverter {
     @TypeConverter
     fun stringToCountry(title: String): Country {
         return Country(title)
+    }
+
+    // For OperatorInfo
+    @TypeConverter
+    fun operatorInfoToString(operatorInfo: OperatorInfo): String {
+        return Gson().toJson(operatorInfo)
+    }
+
+    @TypeConverter
+    fun stringToOperatorInfo(operatorInfo: String): OperatorInfo {
+        return Gson().fromJson(operatorInfo, OperatorInfo::class.java)
     }
 }

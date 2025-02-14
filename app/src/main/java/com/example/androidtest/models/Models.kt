@@ -23,7 +23,8 @@ data class ChargingStation(
     @SerialName("UsageType") val usageType: UsageType?,
     @SerialName("StatusType") val statusType: StatusType?,
     @SerialName("AddressInfo") val addressInfo: AddressInfo?,
-    @SerialName("Connections") val connections: List<Connection>?
+    @SerialName("Connections") val connections: List<Connection>?,
+    @SerialName("OperatorInfo") val operatorInfo: OperatorInfo?,
 ) {
     fun locationPoint(): Point = Point.fromLngLat(addressInfo?.longitude ?: 0.0, addressInfo?.latitude ?: 0.0)
     fun inViewPort(cameraState: CameraState?, screenWidthPx: Int): Boolean {
@@ -100,4 +101,11 @@ data class Connection(
 data class ConnectionType(
     @PrimaryKey @SerialName("ID") val id: Int,
     @SerialName("Title") val title: String
+)
+
+@Serializable
+@Entity(tableName = "operatorinfo")
+data class OperatorInfo(
+    @PrimaryKey @SerialName("ID") val id: Int,
+    @SerialName("WebsiteURL") val website: String?
 )

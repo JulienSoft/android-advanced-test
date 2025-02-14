@@ -1,9 +1,11 @@
 package com.example.androidtest.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,20 +18,23 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.androidtest.R
 import com.example.androidtest.getPlugImageFromId
+import com.example.androidtest.openUrl
 import com.example.androidtest.viewmodel.OpenChargeMapViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewStationComponent(viewModel: OpenChargeMapViewModel) {
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val selectedStation = viewModel.selectedStation.collectAsStateWithLifecycle()
 
     if(selectedStation.value != null) {
@@ -41,9 +46,24 @@ fun ViewStationComponent(viewModel: OpenChargeMapViewModel) {
             sheetState = sheetState,
         ) {
             val station = selectedStation.value
+            val website = station?.operatorInfo?.website
             Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
-                Text(station?.addressInfo?.title ?: "",
-                    style = MaterialTheme.typography.bodyLarge)
+                Row {
+                    Text(station?.addressInfo?.title ?: "",
+                        style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        modifier = Modifier.clickable(onClick = {
+                            // Display information about the charging station
+                            website?.let { deeplink ->
+                                openUrl(context, deeplink)
+                            }
+                        }).alpha(website?.let { 1f } ?: 0f),
+                        painter = painterResource(id = R.drawable.ic_info),
+                        contentDescription = "Information",
+                    )
+                }
+
                 Text(station?.addressInfo?.addressLine1 ?: "",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
