@@ -30,11 +30,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.androidtest.ui.theme.loadingBarBackgroundColor
 import com.example.androidtest.ui.theme.loadingBarColor
 import com.example.androidtest.viewmodel.OpenChargeMapViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoadingErrorComponent() {
-    val viewModel: OpenChargeMapViewModel = koinViewModel()
+fun LoadingErrorComponent(viewModel: OpenChargeMapViewModel) {
     val loadingUIState = viewModel.loadingUIState.collectAsStateWithLifecycle().value
     val infiniteTransition = rememberInfiniteTransition()
 

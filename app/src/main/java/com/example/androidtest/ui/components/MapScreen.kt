@@ -44,16 +44,14 @@ import com.mapbox.maps.viewannotation.viewAnnotationOptions
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(FlowPreview::class)
 @Composable
-fun MapScreen() {
+fun MapScreen(viewModel: OpenChargeMapViewModel) {
     val isDarkMode = isSystemInDarkTheme()
     val coroutineScope = rememberCoroutineScope()
     val mapState = rememberMapState()       // Contains the state of the map (current viewport)
-    val viewModel: OpenChargeMapViewModel = koinViewModel()
 
     val chargingStations by viewModel.chargingStations.collectAsStateWithLifecycle()
     val filteredStations by viewModel.filteredStations.collectAsStateWithLifecycle()
@@ -95,6 +93,7 @@ fun MapScreen() {
         }
     }
 
+    // Add map
     MapboxMap(
         Modifier
             .fillMaxSize(),
@@ -184,7 +183,7 @@ fun MapScreen() {
                         allowOverlap(true)
                     }
                 ) {
-                    MapChargingStationAnnotation(station)
+                    MapChargingStationAnnotation(viewModel, station)
                 }
             }
         }

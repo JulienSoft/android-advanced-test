@@ -1,6 +1,7 @@
 package com.example.androidtest.ui.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -13,15 +14,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.androidtest.R
 import com.example.androidtest.models.ChargingStation
+import com.example.androidtest.viewmodel.OpenChargeMapViewModel
 
 @Composable
-fun MapChargingStationAnnotation(station: ChargingStation) {
+fun MapChargingStationAnnotation(viewModel: OpenChargeMapViewModel, station: ChargingStation) {
     // Return if statusType is not available, I don't want to display incomplete charging station
     val color = station.statusType?.color() ?: return
 
     val painter = painterResource(R.drawable.electric_bolt)
     Canvas(
         modifier = Modifier
+            .clickable(onClick = {
+                viewModel.selectedStation.value = station
+            })
             .height(40.dp) // Increased height to accommodate the triangle
             .width(35.dp)
     ) {

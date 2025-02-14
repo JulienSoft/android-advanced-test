@@ -37,9 +37,12 @@ class OpenChargeMapViewModel(
     val chargingStations = repository.getAllChargingStations()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList()) // Caches and prevents recomputation
 
-    // Debounced viewport stations
+    // Viewport stations
     private val _filteredStations = MutableStateFlow<List<ChargingStation>>(emptyList())
     val filteredStations: StateFlow<List<ChargingStation>> = _filteredStations
+
+    // Current station selected
+    val selectedStation: MutableStateFlow<ChargingStation?> = MutableStateFlow<ChargingStation?>(null)
 
     // Store the current camera state (center, zoom, pitch, bearing, etc...)
     private val _cameraState = MutableStateFlow<CameraState?>(null)

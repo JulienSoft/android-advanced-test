@@ -52,12 +52,12 @@ class RoomTypeConverter {
     // For Connection
     @TypeConverter
     fun connectionTypeToString(connectionType: ConnectionType): String {
-        return connectionType.title
+        return Gson().toJson(connectionType)
     }
 
     @TypeConverter
-    fun stringToConnectionType(title: String): ConnectionType {
-        return ConnectionType(title)
+    fun stringToConnectionType(connectionType: String): ConnectionType {
+        return Gson().fromJson(connectionType, ConnectionType::class.java)
     }
 
     // For AddressInfo

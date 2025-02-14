@@ -91,11 +91,13 @@ data class Country(
 data class Connection(
     @PrimaryKey @SerialName("ID") val id: Int,
     @SerialName("ConnectionType") val connectionType: ConnectionType?,
-    @SerialName("PowerKW") val powerKW: Double?
+    @SerialName("PowerKW") val powerKW: Double?,
+    @SerialName("Quantity") val quantity: Int?
 )
 
 @Serializable
 @Entity(tableName = "connectiontype")
 data class ConnectionType(
-    @PrimaryKey @SerialName("Title") val title: String
+    @PrimaryKey @SerialName("ID") val id: Int,
+    @SerialName("Title") val title: String
 )

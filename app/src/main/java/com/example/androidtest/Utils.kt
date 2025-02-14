@@ -64,3 +64,16 @@ fun metersToLongitude(meters: Double, latitude: Double): Double {
     val metersPerDegree = 111_000 * cos(Math.toRadians(latitude))
     return meters / metersPerDegree
 }
+
+fun getPlugImageFromId(id: Int?): Int {
+    return when(id) {
+        2 -> R.drawable.plug_chademo_type4
+        25 -> R.drawable.plug_type2_socket
+        26 -> R.drawable.plug_type3c
+        33 -> R.drawable.plug_type2_ccs
+        1036 -> R.drawable.plug_type2_tethered
+        else -> {
+            R.drawable.plug_unknown
+        }
+    }
+}
