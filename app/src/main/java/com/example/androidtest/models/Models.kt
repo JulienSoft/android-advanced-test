@@ -1,5 +1,6 @@
 package com.example.androidtest.models
 
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -27,17 +28,17 @@ data class ChargingStation(
     @SerialName("OperatorInfo") val operatorInfo: OperatorInfo?,
 ) {
     fun locationPoint(): Point = Point.fromLngLat(addressInfo?.longitude ?: 0.0, addressInfo?.latitude ?: 0.0)
-    fun inViewPort(cameraState: CameraState?, screenWidthPx: Int): Boolean {
+    fun inViewPort(cameraState: CameraState?, screenSize: Size): Boolean {
         if (cameraState == null) return false
 
         val centerLat = cameraState.center.latitude()
         val centerLon = cameraState.center.longitude()
 
-        val distance = distanceFromCameraStateInMeters(cameraState, screenWidthPx)
+        val distance = distanceFromCameraStateInMeters(cameraState, screenSize)
 
         // Convert meters to latitude/longitude offsets
-        val latOffset = metersToLatitude(distance / 2)  // Divide by 2 for half viewport
-        val lonOffset = metersToLongitude(distance / 2, centerLat)
+        val latOffset = metersToLatitude(distance.width.toDouble() / 2)  // Divide by 2 for half viewport
+        val lonOffset = metersToLongitude(distance.height.toDouble() / 2, centerLat)
 
         // Get charging station location
         val stationLat = locationPoint().latitude()

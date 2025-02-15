@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.compose.ui.geometry.Size
 import androidx.core.net.toUri
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraState
@@ -42,13 +43,15 @@ fun haversineDistance(p1: Point, p2: Point): Double {
     return radius * c // Returns distance in meters
 }
 
-fun distanceFromCameraStateInMeters(cameraState: CameraState, screenWidth: Int): Double {
+fun distanceFromCameraStateInMeters(cameraState: CameraState, screenSize: Size): Size {
     // Calculate the meters per pixel based on the resolution and latitude
     val metersPerPixel = getMetersPerPixelAtLatitude(cameraState.center.latitude(), cameraState.zoom.toDouble())
 
     // Calculate the screen width in meters
-    val screenWidthMeters = metersPerPixel * screenWidth
-    return screenWidthMeters
+    val screenWidthMeters = metersPerPixel * screenSize.width
+    val screenHeightMeters = metersPerPixel * screenSize.height
+
+    return Size(screenWidthMeters.toFloat(), screenHeightMeters.toFloat())
 }
 
 /**

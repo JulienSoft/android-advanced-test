@@ -41,7 +41,7 @@ class OpenChargeMapViewModel(
     private val _filteredStations = MutableStateFlow<List<ChargingStation>>(emptyList())
     val filteredStations: StateFlow<List<ChargingStation>> = _filteredStations
 
-    // Current station selected
+    // Current station selected displayed in bottom sheet
     val selectedStation: MutableStateFlow<ChargingStation?> = MutableStateFlow<ChargingStation?>(null)
 
     // Store the current camera state (center, zoom, pitch, bearing, etc...)
@@ -53,13 +53,13 @@ class OpenChargeMapViewModel(
         }
     }
 
-    // Store screen width in pixels to calculate distance with zoom
-    private val _screenWidth = MutableStateFlow(0) // Store screen width
-    val screenWidth = _screenWidth.asStateFlow()
+    // Store screen size in pixels to calculate distance with zoom
+    private val _screenSize = MutableStateFlow<Size>(Size(0f, 0f)) // Store screen width
+    val screenSize = _screenSize.asStateFlow()
 
-    fun updateScreenWidth(width: Int) {
+    fun updateScreenSize(size: Size) {
         viewModelScope.launch {
-            _screenWidth.value = width
+            _screenSize.value = size
         }
     }
 
@@ -82,7 +82,7 @@ class OpenChargeMapViewModel(
                 getStationResults(cameraState)
 
                 _filteredStations.update {
-                    chargingStations.value.filter { it.inViewPort(cameraState, screenWidth.value) }
+                    chargingStations.value.filter { it.inViewPort(cameraState, screenSize.value) }
                 }
             }
         }
@@ -104,10 +104,13 @@ class OpenChargeMapViewModel(
         if (cameraState == null) return
 
         // Calculate the distance based on the camera state
-        val distanceKm = distanceFromCameraStateInMeters(cameraState, screenWidth.value) / 1000
+        val distanceKm = distanceFromCameraStateInMeters(cameraState, screenSize.value) / 1000f
+
+        // Take the max of the distance (First step to prepare tablet support)
+        val distance = kotlin.math.max(distanceKm.width.toInt(), distanceKm.height.toInt())
 
         // Get the stations based on the new camera state
-        getStationResults(cameraState.center.longitude(), cameraState.center.latitude(), distance = distanceKm.toInt())
+        getStationResults(cameraState.center.longitude(), cameraState.center.latitude(), distance = distance)
     }
 
     // maxResults: Maximum number of results to return, can be configured in settings

@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
@@ -60,7 +61,8 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
     var screenWidth = 0f
     with(LocalDensity.current) {
         screenWidth = configuration.screenWidthDp.dp.toPx()
-        viewModel.updateScreenWidth(screenWidth.toInt())
+        val screenHeight = configuration.screenHeightDp.dp.toPx()
+        viewModel.updateScreenSize(Size(screenWidth, screenHeight))
     }
 
     var showDynamicViewAnnotations by remember {

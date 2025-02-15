@@ -36,12 +36,12 @@ fun LoadingErrorComponent(viewModel: OpenChargeMapViewModel) {
     val loadingUIState = viewModel.loadingUIState.collectAsStateWithLifecycle().value
     val infiniteTransition = rememberInfiniteTransition()
 
-    val screenWidth = viewModel.screenWidth.collectAsStateWithLifecycle().value
+    val screenSize = viewModel.screenSize.collectAsStateWithLifecycle().value
 
     // Animate the position of the moving color segment
     val offsetX = infiniteTransition.animateFloat(
         initialValue = -200f,
-        targetValue = screenWidth.toFloat(),
+        targetValue = screenSize.width.toFloat(),
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 2000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
