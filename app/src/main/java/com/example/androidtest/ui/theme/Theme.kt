@@ -39,9 +39,12 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
-const val stationOperationnalColor = 0xAA2caf56.toInt()
 const val stationOfflineColor = 0xAA000000.toInt()
 const val stationUnknownColor = 0xAA5555FF.toInt()
+
+const val stationPowerHigh = 0xAAf57419.toInt()
+const val stationPowerLow = 0xAA2caf56.toInt()
+const val stationPowerUnknown = 0xAA2caf56.toInt()      // Same as stationPowerLow
 
 const val loadingBarBackgroundColor = 0x55a7dcf6.toInt()
 const val loadingBarColor = 0xFF21abed.toInt()

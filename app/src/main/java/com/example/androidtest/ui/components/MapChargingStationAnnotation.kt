@@ -18,10 +18,8 @@ import com.example.androidtest.viewmodel.OpenChargeMapViewModel
 
 @Composable
 fun MapChargingStationAnnotation(viewModel: OpenChargeMapViewModel, station: ChargingStation) {
-    // Return if statusType is not available, I don't want to display incomplete charging station
-    val color = station.statusType?.color() ?: return
-
-    val painter = if(station.statusType.isOperational == true)
+    val backgroundColor = station.backgroundColor()
+    val painter = if(station.statusType?.isOperational == true)
         painterResource(R.drawable.electric_bolt)
     else
         painterResource(R.drawable.electric_bolt_offline)
@@ -41,7 +39,7 @@ fun MapChargingStationAnnotation(viewModel: OpenChargeMapViewModel, station: Cha
 
         // Draw the rectangle
         drawRoundRect(
-            color = color,
+            color = backgroundColor,
             size = Size(rectWidth, rectHeight),
             cornerRadius = CornerRadius(5.dp.toPx(), 5.dp.toPx())
         )
@@ -54,7 +52,7 @@ fun MapChargingStationAnnotation(viewModel: OpenChargeMapViewModel, station: Cha
                 lineTo(middlePoint + 5.dp.toPx(), rectHeight - 1.dp.toPx()) // Bottom-right corner of the rectangle
                 close()
             },
-            color = color
+            color = backgroundColor
         )
 
         // Draw the icon

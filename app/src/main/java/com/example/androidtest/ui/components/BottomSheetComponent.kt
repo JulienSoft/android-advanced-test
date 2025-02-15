@@ -78,17 +78,18 @@ fun BottomSheetComponent(viewModel: OpenChargeMapViewModel) {
                 LazyRow(
                     modifier = Modifier.padding(top = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(station?.connections?.size ?: 0) { index ->
-                        val connection = station?.connections?.get(index)
-                        val quantity = connection?.quantity
-                        val powerKW = connection?.powerKW ?: "?"
+                    val connections = station?.connections?: emptyList()
+                    items(connections.size) { index ->
+                        val connection = connections[index]
+                        val quantity = connection.quantity
+                        val powerKW = connection.powerKW ?: "?"
 
                         Card {
-                            Row(modifier = Modifier.background(station?.statusType?.color() ?: MaterialTheme.colorScheme.primary).padding(8.dp),
+                            Row(modifier = Modifier.background(connection.color()).padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     modifier = Modifier.size(40.dp),
-                                    painter = painterResource(id = getPlugImageFromId(connection?.connectionType?.id)),
+                                    painter = painterResource(id = getPlugImageFromId(connection.connectionType?.id)),
                                     contentDescription = "Plug icon")
 
                                 Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.Start) {

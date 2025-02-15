@@ -8,7 +8,9 @@ import com.example.androidtest.distanceFromCameraStateInMeters
 import com.example.androidtest.metersToLatitude
 import com.example.androidtest.metersToLongitude
 import com.example.androidtest.ui.theme.stationOfflineColor
-import com.example.androidtest.ui.theme.stationOperationnalColor
+import com.example.androidtest.ui.theme.stationPowerHigh
+import com.example.androidtest.ui.theme.stationPowerLow
+import com.example.androidtest.ui.theme.stationPowerUnknown
 import com.example.androidtest.ui.theme.stationUnknownColor
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraState
@@ -48,6 +50,14 @@ data class ChargingStation(
         return stationLat in (centerLat - latOffset)..(centerLat + latOffset) &&
                 stationLon in (centerLon - lonOffset)..(centerLon + lonOffset)
     }
+
+    fun backgroundColor(): Color {
+        if(statusType?.isOperational == null) return Color(stationUnknownColor)
+        else if(statusType.isOperational == false) return Color(stationOfflineColor)
+
+        val connection = connections?.maxBy({ it.levelID ?: 0 })
+        return connection?.color() ?: Color(stationUnknownColor)
+    }
 }
 
 @Serializable
@@ -62,15 +72,7 @@ data class UsageType(
 data class StatusType(
     @SerialName("IsOperational") val isOperational: Boolean?,
     @PrimaryKey @SerialName("Title") val title: String
-) {
-    fun color(): Color {
-        return Color(when (isOperational) {
-            true -> stationOperationnalColor
-            false -> stationOfflineColor
-            null -> stationUnknownColor
-        })
-    }
-}
+)
 
 @Serializable
 @Entity(tableName = "addressinfo")
@@ -94,8 +96,17 @@ data class Connection(
     @PrimaryKey @SerialName("ID") val id: Int,
     @SerialName("ConnectionType") val connectionType: ConnectionType?,
     @SerialName("PowerKW") val powerKW: Double?,
-    @SerialName("Quantity") val quantity: Int?
-)
+    @SerialName("Quantity") val quantity: Int?,
+    @SerialName("LevelID") val levelID: Int?,
+) {
+    fun color(): Color {
+        return Color(when(levelID) {
+            3 -> stationPowerHigh
+            2 -> stationPowerLow
+            else -> stationPowerUnknown
+        })
+    }
+}
 
 @Serializable
 @Entity(tableName = "connectiontype")
