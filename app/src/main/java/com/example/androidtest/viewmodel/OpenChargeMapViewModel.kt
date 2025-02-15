@@ -1,5 +1,6 @@
 package com.example.androidtest.viewmodel
 
+import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidtest.api.APIResult
@@ -61,6 +62,20 @@ class OpenChargeMapViewModel(
         viewModelScope.launch {
             _screenSize.value = size
         }
+    }
+
+    // Change map layers
+    private val _mapLayers = MutableStateFlow(0)
+    val mapLayers: StateFlow<Int> = _mapLayers
+    fun changeMapLayers() {
+        _mapLayers.value = (_mapLayers.value + 1) % 2
+    }
+
+    // Center map on user
+    private val _centerMapOnUser = MutableStateFlow(false)
+    val centerMapOnUser: StateFlow<Boolean> = _centerMapOnUser
+    fun centerMapOnUser(state: Boolean = true) {
+        _centerMapOnUser.value = state
     }
 
     init {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,11 +24,13 @@ import com.mapbox.maps.coroutine.mapLoadedEvents
 import com.mapbox.maps.dsl.cameraOptions
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.ViewAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationGroup
 import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.standard.LightPresetValue
+import com.mapbox.maps.extension.compose.style.standard.MapboxStandardSatelliteStyle
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
 import com.mapbox.maps.extension.style.expressions.generated.Expression
 import com.mapbox.maps.extension.style.expressions.generated.Expression.Companion.literal
@@ -54,6 +57,8 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val mapState = rememberMapState()       // Contains the state of the map (current viewport)
 
+    val centerMapOnUser by viewModel.centerMapOnUser.collectAsStateWithLifecycle()
+    val mapLayers by viewModel.mapLayers.collectAsStateWithLifecycle()
     val chargingStations by viewModel.chargingStations.collectAsStateWithLifecycle()
     val filteredStations by viewModel.filteredStations.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
@@ -95,6 +100,13 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
         }
     }
 
+    LaunchedEffect(centerMapOnUser) {
+        if(centerMapOnUser) {
+            viewModel.centerMapOnUser(false)
+            transitionToFollowPuckState(mapViewportState)
+        }
+    }
+
     // Add map
     MapboxMap(
         Modifier
@@ -106,8 +118,9 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
         logo = { },            // Disable logo
         attribution = { },     // Disable attribution
         style = {
-            MapboxStandardStyle { // Another option MapboxStandardSatelliteStyle()
-                // Change light mode with system
+            if(mapLayers == 0) MapboxStandardStyle {
+                lightPreset = if (isDarkMode) LightPresetValue.NIGHT else LightPresetValue.DAY
+            } else MapboxStandardSatelliteStyle {
                 lightPreset = if (isDarkMode) LightPresetValue.NIGHT else LightPresetValue.DAY
             }
 
@@ -162,12 +175,7 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
                 pulsingEnabled = true
             }
 
-            // Set the zoom to display a bigger zone around the puck
-            mapViewportState.transitionToFollowPuckState(
-                followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
-                    .zoom(10.0)
-                    .build()
-            )
+            transitionToFollowPuckState(mapViewportState)
 
             // Only show view annotation after all the runtime layers are added.
             mapView.mapboxMap.mapLoadedEvents.firstOrNull()?.let {
@@ -190,4 +198,13 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
             }
         }
     }
+}
+
+fun transitionToFollowPuckState(mapViewportState: MapViewportState) {
+    // Set the zoom to display a bigger zone around the puck
+    mapViewportState.transitionToFollowPuckState(
+        followPuckViewportStateOptions = FollowPuckViewportStateOptions.Builder()
+            .zoom(10.0)
+            .build()
+    )
 }
