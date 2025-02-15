@@ -18,10 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.androidtest.ui.components.BottomSheetComponent
 import com.example.androidtest.ui.components.LoadingErrorComponent
 import com.example.androidtest.ui.components.MapScreen
 import com.example.androidtest.ui.components.PermissionsRequest
-import com.example.androidtest.ui.components.ViewStationComponent
 import com.example.androidtest.ui.theme.AndroidTestTheme
 import com.example.androidtest.viewmodel.OpenChargeMapViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -45,8 +45,8 @@ class MainActivity : ComponentActivity() {
                         SnackbarHost(hostState = snackbarHostState)
                     }) { contentPadding ->
 
-                    ViewStationComponent(viewModel)
                     Box(modifier = Modifier.padding(contentPadding)) {
+                        BottomSheetComponent(viewModel)
                         PermissionsRequest(snackbarHostState)
                         MapScreen(viewModel)
                         LoadingErrorComponent(viewModel)

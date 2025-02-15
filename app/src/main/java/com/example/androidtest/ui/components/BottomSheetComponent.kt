@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -32,22 +34,27 @@ import com.example.androidtest.viewmodel.OpenChargeMapViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewStationComponent(viewModel: OpenChargeMapViewModel) {
+fun BottomSheetComponent(viewModel: OpenChargeMapViewModel) {
     val sheetState = rememberModalBottomSheetState()
     val context = LocalContext.current
     val selectedStation = viewModel.selectedStation.collectAsStateWithLifecycle()
 
     if(selectedStation.value != null) {
+        val station = selectedStation.value
+        val website = station?.operatorInfo?.website
+
         ModalBottomSheet(
+            modifier = Modifier.fillMaxWidth().navigationBarsPadding(),
             shape = RoundedCornerShape(0.dp),
             onDismissRequest = {
                 viewModel.selectedStation.value = null
             },
             sheetState = sheetState,
         ) {
-            val station = selectedStation.value
-            val website = station?.operatorInfo?.website
-            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
                 Row {
                     Text(station?.addressInfo?.title ?: "",
                         style = MaterialTheme.typography.bodyLarge)
