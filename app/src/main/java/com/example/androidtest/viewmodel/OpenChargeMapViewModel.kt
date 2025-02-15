@@ -28,7 +28,7 @@ data class LoadingUIState(
 class OpenChargeMapViewModel(
     private val repository: OpenChargeMapRepository
 ): ViewModel() {
-    val minDistanceThreshold = 50.0   // In meters
+    val minDistanceThreshold = 50.0               // In meters
     val debounceCameraStateChange: Long = 300     // Adjust as needed
 
     // Store the current state of the stations UI
@@ -41,6 +41,8 @@ class OpenChargeMapViewModel(
     // Viewport stations
     private val _filteredStations = MutableStateFlow<List<ChargingStation>>(emptyList())
     val filteredStations: StateFlow<List<ChargingStation>> = _filteredStations
+        .debounce(800)
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList()) // Caches and prevents recomputation
 
     // Current station selected displayed in bottom sheet
     val selectedStation: MutableStateFlow<ChargingStation?> = MutableStateFlow<ChargingStation?>(null)

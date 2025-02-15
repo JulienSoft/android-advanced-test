@@ -185,8 +185,7 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
 
         // Display annotations for each station on the map
         if(showDynamicViewAnnotations && (mapViewportState.cameraState?.zoom ?: 0.0) > 11) {
-            val stationsToRender = remember(filteredStations) { filteredStations }
-            stationsToRender.forEach { station ->
+            filteredStations.forEach { station ->
                 ViewAnnotation(
                     options = viewAnnotationOptions {
                         geometry(station.locationPoint()) // Place at correct coordinates
