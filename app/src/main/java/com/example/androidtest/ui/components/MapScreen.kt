@@ -12,8 +12,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -32,7 +30,6 @@ import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.standard.LightPresetValue
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardSatelliteStyle
 import com.mapbox.maps.extension.compose.style.standard.MapboxStandardStyle
-import com.mapbox.maps.extension.style.expressions.generated.Expression
 import com.mapbox.maps.extension.style.expressions.generated.Expression.Companion.literal
 import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.animation.MapAnimationOptions.Companion.mapAnimationOptions
@@ -119,9 +116,9 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
         attribution = { },     // Disable attribution
         style = {
             if(mapLayers == 0) MapboxStandardStyle {
-                lightPreset = if (isDarkMode) LightPresetValue.NIGHT else LightPresetValue.DAY
+                lightPreset = if (isDarkMode) LightPresetValue.DUSK else LightPresetValue.DAY
             } else MapboxStandardSatelliteStyle {
-                lightPreset = if (isDarkMode) LightPresetValue.NIGHT else LightPresetValue.DAY
+                lightPreset = if (isDarkMode) LightPresetValue.DUSK else LightPresetValue.DAY
             }
 
             PointAnnotationGroup(
@@ -132,18 +129,18 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
                 annotationConfig = AnnotationConfig(
                     annotationSourceOptions = AnnotationSourceOptions(
                         clusterOptions = ClusterOptions(
-                            textColorExpression = Expression.color(Color.Cyan.toArgb()),
                             textSize = 20.0,
                             clusterMaxZoom = 10,
                             circleRadiusExpression = literal(20.0),
+                            textColor = if (isDarkMode) android.graphics.Color.WHITE else android.graphics.Color.BLACK,
                             colorLevels = listOf(
-                                Pair(100, Color.Red.toArgb()),
-                                Pair(50, Color.Blue.toArgb()),
-                                Pair(0, Color.Green.toArgb())
+                                Pair(100, android.graphics.Color.RED),
+                                Pair(50, android.graphics.Color.YELLOW),
+                                Pair(0,android.graphics.Color.GREEN),
                             )
                         )
                     )
-                ),
+                )
             ) {
                 interactionsState.isDraggable = true
                 interactionsState
