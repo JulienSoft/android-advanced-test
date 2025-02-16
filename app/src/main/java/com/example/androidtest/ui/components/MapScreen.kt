@@ -150,10 +150,10 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
                             mapViewportState.flyTo(
                                 cameraOptions {
                                     center(geometry as Point)
-                                    zoom(12.0)
+                                    zoom(11.0)
                                 },
                                 mapAnimationOptions {
-                                    duration(3_000)
+                                    duration(5_000)
                                 }
                             )
                         }
@@ -181,7 +181,7 @@ fun MapScreen(viewModel: OpenChargeMapViewModel) {
         }
 
         // Display annotations for each station on the map
-        if(showDynamicViewAnnotations && (mapViewportState.cameraState?.zoom ?: 0.0) > 11) {
+        if(showDynamicViewAnnotations && (mapViewportState.cameraState?.zoom ?: 0.0) >= 11) {
             filteredStations.forEach { station ->
                 ViewAnnotation(
                     options = viewAnnotationOptions {
