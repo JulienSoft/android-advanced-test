@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 
 interface OpenChargeMapRepository {
-    suspend fun getChargingStations(longitude: Double, latitude: Double, maxResults: Int, distance: Int): APIResult<List<ChargingStation>>
+    suspend fun fetchCharginStations(longitude: Double, latitude: Double, maxResults: Int, distance: Int): APIResult<List<ChargingStation>>
     fun getAllChargingStations(): Flow<List<ChargingStation>>
 }
 
@@ -23,7 +23,7 @@ class OpenChargeMapRepositoryImpl(
 
     override fun getAllChargingStations() = chargingDao.getAllChargingStations()
 
-    override suspend fun getChargingStations(
+    override suspend fun fetchCharginStations(
         longitude: Double,
         latitude: Double,
         maxResults: Int,
@@ -32,6 +32,7 @@ class OpenChargeMapRepositoryImpl(
         return withContext(dispatcher) {
             try{
                 val chargingStations = apiService.getChargingStations(longitude, latitude, maxResults, distance)
+                // Insert in db
                 chargingDao.insertAllChargingStation(chargingStations)
                 APIResult.Success(chargingStations)
             }catch (e: Exception) {

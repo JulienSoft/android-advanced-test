@@ -4,6 +4,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.androidtest.MapProjectionProvider
+import com.example.androidtest.MapProjectionProviderImpl
 import com.example.androidtest.distanceFromCameraStateInMeters
 import com.example.androidtest.metersToLatitude
 import com.example.androidtest.metersToLongitude
@@ -26,17 +28,17 @@ data class ChargingStation(
     @SerialName("UsageType") val usageType: UsageType?,
     @SerialName("StatusType") val statusType: StatusType?,
     @SerialName("AddressInfo") val addressInfo: AddressInfo?,
-    @SerialName("Connections") val connections: List<Connection>?,
-    @SerialName("OperatorInfo") val operatorInfo: OperatorInfo?,
+    @SerialName("Connections") val connections: List<Connection>? = null,
+    @SerialName("OperatorInfo") val operatorInfo: OperatorInfo? = null,
 ) {
     fun locationPoint(): Point = Point.fromLngLat(addressInfo?.longitude ?: 0.0, addressInfo?.latitude ?: 0.0)
-    fun inViewPort(cameraState: CameraState?, screenSize: Size): Boolean {
+    fun inViewPort(cameraState: CameraState?, screenSize: Size, projectionProvider: MapProjectionProvider = MapProjectionProviderImpl()): Boolean {
         if (cameraState == null) return false
 
         val centerLat = cameraState.center.latitude()
         val centerLon = cameraState.center.longitude()
 
-        val distance = distanceFromCameraStateInMeters(cameraState, screenSize)
+        val distance = distanceFromCameraStateInMeters(cameraState, screenSize, projectionProvider)
 
         // Convert meters to latitude/longitude offsets
         val latOffset = metersToLatitude(distance.width.toDouble() / 2)  // Divide by 2 for half viewport
@@ -81,7 +83,7 @@ data class AddressInfo(
     @SerialName("AddressLine1") val addressLine1: String?,
     @SerialName("Latitude") val latitude: Double?,
     @SerialName("Longitude") val longitude: Double?,
-    @SerialName("Country") val country: Country?
+    @SerialName("Country") val country: Country? = null
 )
 
 @Serializable

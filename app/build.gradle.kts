@@ -82,21 +82,27 @@ dependencies {
     // Used for permissions
     implementation(libs.accompanist.permissions)
 
-    // Room
-    // implementation(libs.room.runtime)
-    // ksp(libs.androidx.room.compiler)
-
-    implementation("androidx.room:room-runtime:2.6.1") // Use the latest Room version
-    ksp("androidx.room:room-compiler:2.6.1") // Use KSP for annotation processing
+    implementation(libs.room.runtime)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
 
     // Testing
-    androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    // Coroutines test utilities
+    testImplementation(libs.kotlinx.coroutines.test)
+    // AndroidX testing
+    testImplementation(libs.androidx.core.testing)
+    // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.androidx.ui.test)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
