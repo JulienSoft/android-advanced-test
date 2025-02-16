@@ -57,7 +57,7 @@ data class ChargingStation(
         if(statusType?.isOperational == null) return Color(stationUnknownColor)
         else if(statusType.isOperational == false) return Color(stationOfflineColor)
 
-        val connection = connections?.maxBy({ it.levelID ?: 0 })
+        val connection = connections?.maxByOrNull ({ it.levelID ?: 0 })
         return connection?.color() ?: Color(stationUnknownColor)
     }
 }
